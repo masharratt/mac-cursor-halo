@@ -33,3 +33,10 @@ public struct RippleAnimation: Equatable, Sendable {
         )
     }
 }
+
+/// Stroke parameters shared by the live overlay and the demo renderer.
+public enum HaloStyle {
+    public static let highlightStrokeAlpha = 0.8
+    public static let highlightLineWidth = 2.0
+    public static let rippleLineWidth = 3.0
+}

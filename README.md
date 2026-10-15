@@ -2,6 +2,12 @@
 
 A tiny menu bar app for macOS that makes your mouse pointer easy to see. Handy for screen sharing, recordings, presentations, or just finding the cursor on a big display.
 
+![Cursor Halo: a highlight circle around the pointer, plus a left-click ripple and a right-click ripple](docs/images/cursor-halo-demo.png)
+
+The five colors:
+
+![The five highlight colors: yellow, red, blue, green and pink](docs/images/cursor-halo-colors.png)
+
 ## Features
 
 - **Highlight circle:** a soft colored circle that follows the pointer on every screen
@@ -18,19 +24,26 @@ macOS already has a pointer size and color setting, and shake to locate, under *
 ## Requirements
 
 - macOS 14 or later (developed on macOS 26, Apple Silicon)
-- Xcode or the Xcode command line tools (Swift 6)
+- Apple's Command Line Tools (full Xcode is not needed)
 
-## Build and install
+## Getting started
 
-```sh
-git clone https://github.com/masharratt/mac-cursor-halo.git
-cd mac-cursor-halo
-scripts/bundle.sh --install
-```
+1. **Install the Command Line Tools.** Open the Terminal app and run `xcode-select --install`. Click Install in the window that appears and wait for it to finish. Skip this if you already have Xcode or the tools.
+2. **Download and install Cursor Halo.** In Terminal, run:
 
-`--install` copies the app to `/Applications/CursorHalo.app` and opens it. Without the flag, the app is left in `build/CursorHalo.app`.
+   ```sh
+   git clone https://github.com/masharratt/mac-cursor-halo.git
+   cd mac-cursor-halo
+   scripts/bundle.sh --install
+   ```
 
-Look for the dashed-circle icon in the menu bar.
+   This builds the app, copies it to `/Applications/CursorHalo.app` and opens it. Without `--install`, the app is left in `build/CursorHalo.app`.
+3. **Find it in the menu bar.** Look for the dashed-circle icon at the top right of your screen.
+4. **Use it.** Press **Control+Option+Command+H** to show or hide the highlight circle. Click the menu bar icon to turn the highlight or click ripples on or off, and to pick a size and color.
+5. **Optional: start it at login.** Choose **Launch at Login** in the menu so it is always running.
+6. **Updating and uninstalling.**
+   - To update, run `git pull` inside the `mac-cursor-halo` folder, then run `scripts/bundle.sh --install` again.
+   - To uninstall, choose **Quit** from the menu bar icon, then delete `/Applications/CursorHalo.app`.
 
 ## Change the shortcut
 
@@ -45,3 +58,7 @@ Cursor Halo takes the shortcut over system wide, so the same combination stops w
 ```sh
 swift test
 ```
+
+## Development
+
+The README images are generated from the app's real drawing settings with synthetic content: `swift run CursorHalo --render-demo docs/images` (hidden flag; writes the PNGs and exits).

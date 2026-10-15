@@ -74,8 +74,8 @@ final class OverlayController {
         for o in overlays {
             o.highlight.path = path
             o.highlight.fillColor = nsColor(rgb, alpha: Settings.highlightAlpha)
-            o.highlight.strokeColor = nsColor(rgb, alpha: 0.8)
-            o.highlight.lineWidth = 2
+            o.highlight.strokeColor = nsColor(rgb, alpha: HaloStyle.highlightStrokeAlpha)
+            o.highlight.lineWidth = HaloStyle.highlightLineWidth
         }
         CATransaction.commit()
     }
@@ -110,7 +110,7 @@ final class OverlayController {
         ring.path = CGPath(ellipseIn: CGRect(x: -r, y: -r, width: r * 2, height: r * 2), transform: nil)
         ring.fillColor = nil
         ring.strokeColor = nsColor(rgb, alpha: 1)
-        ring.lineWidth = 3
+        ring.lineWidth = HaloStyle.rippleLineWidth
         ring.position = ScreenGeometry.localPoint(point, in: overlay.frame)
         ring.opacity = 0
 
