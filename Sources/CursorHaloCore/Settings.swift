@@ -70,6 +70,7 @@ public struct Settings: Codable, Equatable, Sendable {
     public var rippleEnabled = true
     public var size = HaloSize.medium
     public var color = HaloColor.yellow
+    public var toggleHotKey = HotKey.toggle
 
     public init() {}
 
@@ -82,6 +83,7 @@ public struct Settings: Codable, Equatable, Sendable {
         rippleEnabled = try c.decodeIfPresent(Bool.self, forKey: .rippleEnabled) ?? d.rippleEnabled
         size = try c.decodeIfPresent(HaloSize.self, forKey: .size) ?? d.size
         color = try c.decodeIfPresent(HaloColor.self, forKey: .color) ?? d.color
+        toggleHotKey = try c.decodeIfPresent(HotKey.self, forKey: .toggleHotKey) ?? d.toggleHotKey
     }
 
     public mutating func toggleMaster() {

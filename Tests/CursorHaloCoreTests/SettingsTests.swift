@@ -74,4 +74,27 @@ import Testing
         store.save(s)
         #expect(store.load().color == .blue)
     }
+
+    @Test func defaultToggleHotKeyIsControlOptionCommandH() {
+        #expect(Settings().toggleHotKey == HotKey.toggle)
+        #expect(Settings().toggleHotKey.displayString == "⌃⌥⌘H")
+    }
+
+    @Test func customHotKeyRoundTrips() {
+        let backing = InMemoryBacking()
+        let store = SettingsStore(backing: backing)
+        var s = Settings()
+        s.toggleHotKey = HotKey(keyCode: 105, keyLabel: "F13", modifiers: [.shift])
+        store.save(s)
+        #expect(SettingsStore(backing: backing).load().toggleHotKey == s.toggleHotKey)
+    }
+
+    @Test func oldSavedSettingsWithoutHotKeyDecodeToDefaultHotKey() {
+        let backing = InMemoryBacking()
+        backing.set(Data(#"{"effectsEnabled":false,"size":"large"}"#.utf8), forKey: SettingsStore.key)
+        let s = SettingsStore(backing: backing).load()
+        #expect(s.effectsEnabled == false)
+        #expect(s.size == .large)
+        #expect(s.toggleHotKey == HotKey.toggle)
+    }
 }

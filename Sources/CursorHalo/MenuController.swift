@@ -8,6 +8,8 @@ final class MenuController: NSObject {
     private let menu = NSMenu()
     private var settings: Settings
     private let onChange: (Settings) -> Void
+    private let onChangeShortcut: () -> Void
+    private let onResetShortcut: () -> Void
 
     private let masterItem = NSMenuItem()
     private let highlightItem = NSMenuItem()
@@ -15,12 +17,21 @@ final class MenuController: NSObject {
     private var sizeItems: [NSMenuItem] = []
     private var colorItems: [NSMenuItem] = []
     private let loginItem = NSMenuItem()
+    private let changeShortcutItem = NSMenuItem()
+    private let resetShortcutItem = NSMenuItem()
 
     private static var isBundled: Bool { Bundle.main.bundleURL.pathExtension == "app" }
 
-    init(settings: Settings, onChange: @escaping (Settings) -> Void) {
+    init(
+        settings: Settings,
+        onChange: @escaping (Settings) -> Void,
+        onChangeShortcut: @escaping () -> Void,
+        onResetShortcut: @escaping () -> Void
+    ) {
         self.settings = settings
         self.onChange = onChange
+        self.onChangeShortcut = onChangeShortcut
+        self.onResetShortcut = onResetShortcut
         super.init()
         build()
         refresh(settings)
@@ -31,11 +42,8 @@ final class MenuController: NSObject {
             button.image = NSImage(systemSymbolName: "circle.dashed", accessibilityDescription: "Cursor Halo")
         }
 
-        masterItem.title = "Effects On"
         masterItem.target = self
         masterItem.action = #selector(toggleMaster)
-        masterItem.keyEquivalent = HotKey.toggle.keyLabel.lowercased()
-        masterItem.keyEquivalentModifierMask = [.control, .option, .command]
         menu.addItem(masterItem)
         menu.addItem(.separator())
 
@@ -75,6 +83,16 @@ final class MenuController: NSObject {
         menu.addItem(colorParent)
         menu.addItem(.separator())
 
+        changeShortcutItem.title = "Change Shortcut…"
+        changeShortcutItem.target = self
+        changeShortcutItem.action = #selector(changeShortcut)
+        menu.addItem(changeShortcutItem)
+
+        resetShortcutItem.target = self
+        resetShortcutItem.action = #selector(resetShortcut)
+        menu.addItem(resetShortcutItem)
+        menu.addItem(.separator())
+
         loginItem.title = "Launch at Login"
         loginItem.target = self
         loginItem.action = #selector(toggleLogin)
@@ -94,6 +112,9 @@ final class MenuController: NSObject {
 
     func refresh(_ new: Settings) {
         settings = new
+        masterItem.title = "Effects On (\(new.toggleHotKey.displayString))"
+        resetShortcutItem.title = "Reset Shortcut to \(HotKey.toggle.displayString)"
+        resetShortcutItem.isEnabled = new.toggleHotKey != HotKey.toggle
         masterItem.state = new.effectsEnabled ? .on : .off
         highlightItem.state = new.highlightEnabled ? .on : .off
         rippleItem.state = new.rippleEnabled ? .on : .off
@@ -135,6 +156,9 @@ final class MenuController: NSObject {
         }
         refresh(settings)
     }
+
+    @objc private func changeShortcut() { onChangeShortcut() }
+    @objc private func resetShortcut() { onResetShortcut() }
 
     @objc private func quit() { NSApp.terminate(nil) }
 }
