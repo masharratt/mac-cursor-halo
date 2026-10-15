@@ -33,3 +33,12 @@ PLIST
 
 codesign --force --sign - "$APP"
 echo "Built $APP"
+
+# --install: replace /Applications/CursorHalo.app and relaunch it.
+if [[ "${1:-}" == "--install" ]]; then
+    pkill -x CursorHalo || true
+    rm -rf /Applications/CursorHalo.app
+    cp -R "$APP" /Applications/
+    open /Applications/CursorHalo.app
+    echo "Installed /Applications/CursorHalo.app"
+fi
