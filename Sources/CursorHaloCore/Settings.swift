@@ -65,7 +65,6 @@ public struct Settings: Codable, Equatable, Sendable {
     /// Fill alpha of the highlight circle.
     public static let highlightAlpha = 0.35
 
-    public var effectsEnabled = true
     public var highlightEnabled = true
     public var rippleEnabled = true
     public var size = HaloSize.medium
@@ -74,11 +73,11 @@ public struct Settings: Codable, Equatable, Sendable {
 
     public init() {}
 
-    // Missing keys fall back to defaults so older saved data keeps loading after new fields appear.
+    // Missing keys fall back to defaults and unknown keys (like the removed master flag) are ignored,
+    // so older saved data keeps loading.
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = Settings()
-        effectsEnabled = try c.decodeIfPresent(Bool.self, forKey: .effectsEnabled) ?? d.effectsEnabled
         highlightEnabled = try c.decodeIfPresent(Bool.self, forKey: .highlightEnabled) ?? d.highlightEnabled
         rippleEnabled = try c.decodeIfPresent(Bool.self, forKey: .rippleEnabled) ?? d.rippleEnabled
         size = try c.decodeIfPresent(HaloSize.self, forKey: .size) ?? d.size
@@ -86,8 +85,8 @@ public struct Settings: Codable, Equatable, Sendable {
         toggleHotKey = try c.decodeIfPresent(HotKey.self, forKey: .toggleHotKey) ?? d.toggleHotKey
     }
 
-    public mutating func toggleMaster() {
-        effectsEnabled.toggle()
+    public mutating func toggleHighlight() {
+        highlightEnabled.toggle()
     }
 }
 

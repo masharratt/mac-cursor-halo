@@ -41,7 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hotKey = HotKeyRegistration(key) { [weak self] in
             guard let self else { return }
             var s = self.settings
-            s.toggleMaster()
+            s.toggleHighlight()
             self.update(s)
         }
         return hotKey != nil

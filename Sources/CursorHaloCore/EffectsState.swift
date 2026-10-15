@@ -1,4 +1,4 @@
-/// What the app should draw, derived from the master switch and per-effect flags.
+/// What the app should draw, derived from the per-effect flags.
 public struct RenderPlan: Equatable, Sendable {
     public let showHighlight: Bool
     public let showRipple: Bool
@@ -17,8 +17,8 @@ public struct RenderPlan: Equatable, Sendable {
 extension Settings {
     public var renderPlan: RenderPlan {
         RenderPlan(
-            showHighlight: effectsEnabled && highlightEnabled,
-            showRipple: effectsEnabled && rippleEnabled
+            showHighlight: highlightEnabled,
+            showRipple: rippleEnabled
         )
     }
 }

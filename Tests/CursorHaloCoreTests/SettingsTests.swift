@@ -5,7 +5,6 @@ import Testing
 @Suite struct SettingsTests {
     @Test func defaultsMatchSpec() {
         let s = Settings()
-        #expect(s.effectsEnabled)
         #expect(s.highlightEnabled)
         #expect(s.rippleEnabled)
         #expect(s.size == .medium)
@@ -44,7 +43,7 @@ import Testing
         let backing = InMemoryBacking()
         let store = SettingsStore(backing: backing)
         var s = Settings()
-        s.effectsEnabled = false
+        s.highlightEnabled = false
         s.size = .large
         s.color = .pink
         s.rippleEnabled = false
@@ -91,10 +90,17 @@ import Testing
 
     @Test func oldSavedSettingsWithoutHotKeyDecodeToDefaultHotKey() {
         let backing = InMemoryBacking()
-        backing.set(Data(#"{"effectsEnabled":false,"size":"large"}"#.utf8), forKey: SettingsStore.key)
+        backing.set(Data(#"{"size":"large"}"#.utf8), forKey: SettingsStore.key)
         let s = SettingsStore(backing: backing).load()
-        #expect(s.effectsEnabled == false)
         #expect(s.size == .large)
         #expect(s.toggleHotKey == HotKey.toggle)
+    }
+
+    @Test func legacyMasterFlagOffIsIgnoredAndHidesNothing() {
+        let backing = InMemoryBacking()
+        backing.set(Data(#"{"effectsEnabled":false,"size":"large"}"#.utf8), forKey: SettingsStore.key)
+        let s = SettingsStore(backing: backing).load()
+        #expect(s.size == .large)
+        #expect(s.renderPlan == RenderPlan(showHighlight: true, showRipple: true))
     }
 }

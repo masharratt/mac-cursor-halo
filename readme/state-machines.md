@@ -1,31 +1,31 @@
 # State Machines
 
-**Last Updated:** 2026-10-15 (added shortcut recorder lifecycle)
+**Last Updated:** 2026-10-15 (removed master switch; hotkey toggles highlight only)
 
-## 1. Effects
+## 1. Highlight Circle
 
-**Source:** Sources/CursorHaloCore/EffectsState.swift:17
+**Source:** Sources/CursorHaloCore/EffectsState.swift:17, Settings.highlightEnabled
 
 ### States
 
 | State | Meaning |
 |-------|---------|
-| Off | Master switch off. Nothing is drawn, per-effect flags are kept. |
-| On | Master switch on. Highlight and ripple follow their own flags. |
+| Hidden | highlightEnabled is false. The circle is not drawn. The click ripple is unaffected. |
+| Shown | highlightEnabled is true. The circle follows the cursor on its screen. |
 
 ### Transitions
 
 | From | To | Trigger | Guard |
 |------|----|---------|-------|
-| Off | On | Menu "Effects On" or hotkey | None |
-| On | Off | Menu "Effects On" or hotkey | None |
+| Hidden | Shown | Menu "Highlight Circle" or hotkey | None |
+| Shown | Hidden | Menu "Highlight Circle" or hotkey | None |
 
 ### Diagram
 
 ```mermaid
 stateDiagram-v2
-  Off --> On: toggle
-  On --> Off: toggle
+  Hidden --> Shown: toggle
+  Shown --> Hidden: toggle
 ```
 
 ## 2. Shortcut Recorder

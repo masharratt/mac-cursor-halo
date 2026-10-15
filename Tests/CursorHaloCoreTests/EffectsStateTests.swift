@@ -7,34 +7,20 @@ import Testing
         #expect(plan.showHighlight && plan.showRipple)
     }
 
-    @Test func masterOffRendersNothing() {
-        var s = Settings()
-        s.effectsEnabled = false
-        #expect(s.renderPlan == RenderPlan(showHighlight: false, showRipple: false))
-    }
-
     @Test(arguments: [(true, true), (true, false), (false, true), (false, false)])
-    func perEffectFlagsApplyWhenMasterOn(h: Bool, r: Bool) {
+    func perEffectFlagsDriveRenderPlan(h: Bool, r: Bool) {
         var s = Settings()
         s.highlightEnabled = h
         s.rippleEnabled = r
         #expect(s.renderPlan == RenderPlan(showHighlight: h, showRipple: r))
     }
 
-    @Test func masterOffPreservesPerEffectFlags() {
+    @Test func toggleHighlightFlipsOnlyHighlight() {
         var s = Settings()
-        s.rippleEnabled = false
-        s.effectsEnabled = false
-        s.effectsEnabled = true
-        #expect(s.renderPlan == RenderPlan(showHighlight: true, showRipple: false))
-    }
-
-    @Test func toggleMasterFlips() {
-        var s = Settings()
-        s.toggleMaster()
-        #expect(!s.effectsEnabled)
-        s.toggleMaster()
-        #expect(s.effectsEnabled)
+        s.toggleHighlight()
+        #expect(s.renderPlan == RenderPlan(showHighlight: false, showRipple: true))
+        s.toggleHighlight()
+        #expect(s.renderPlan == RenderPlan(showHighlight: true, showRipple: true))
     }
 
     @Test func highlightVisibleOnlyOnCursorScreen() {

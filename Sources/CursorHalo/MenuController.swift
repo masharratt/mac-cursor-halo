@@ -11,7 +11,6 @@ final class MenuController: NSObject {
     private let onChangeShortcut: () -> Void
     private let onResetShortcut: () -> Void
 
-    private let masterItem = NSMenuItem()
     private let highlightItem = NSMenuItem()
     private let rippleItem = NSMenuItem()
     private var sizeItems: [NSMenuItem] = []
@@ -42,12 +41,6 @@ final class MenuController: NSObject {
             button.image = NSImage(systemSymbolName: "circle.dashed", accessibilityDescription: "Cursor Halo")
         }
 
-        masterItem.target = self
-        masterItem.action = #selector(toggleMaster)
-        menu.addItem(masterItem)
-        menu.addItem(.separator())
-
-        highlightItem.title = "Highlight Circle"
         highlightItem.target = self
         highlightItem.action = #selector(toggleHighlight)
         menu.addItem(highlightItem)
@@ -112,16 +105,14 @@ final class MenuController: NSObject {
 
     func refresh(_ new: Settings) {
         settings = new
-        masterItem.title = "Effects On (\(new.toggleHotKey.displayString))"
+        highlightItem.title = "Highlight Circle (\(new.toggleHotKey.displayString))"
         resetShortcutItem.title = "Reset Shortcut to \(HotKey.toggle.displayString)"
         resetShortcutItem.isEnabled = new.toggleHotKey != HotKey.toggle
-        masterItem.state = new.effectsEnabled ? .on : .off
         highlightItem.state = new.highlightEnabled ? .on : .off
         rippleItem.state = new.rippleEnabled ? .on : .off
         for item in sizeItems { item.state = (item.representedObject as? String) == new.size.rawValue ? .on : .off }
         for item in colorItems { item.state = (item.representedObject as? String) == new.color.rawValue ? .on : .off }
         loginItem.state = Self.isBundled && SMAppService.mainApp.status == .enabled ? .on : .off
-        statusItem.button?.appearsDisabled = !new.effectsEnabled
     }
 
     private func change(_ edit: (inout Settings) -> Void) {
@@ -130,8 +121,7 @@ final class MenuController: NSObject {
         onChange(s)
     }
 
-    @objc private func toggleMaster() { change { $0.toggleMaster() } }
-    @objc private func toggleHighlight() { change { $0.highlightEnabled.toggle() } }
+    @objc private func toggleHighlight() { change { $0.toggleHighlight() } }
     @objc private func toggleRipple() { change { $0.rippleEnabled.toggle() } }
 
     @objc private func pickSize(_ sender: NSMenuItem) {
